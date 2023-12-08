@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   TextInput,
   ImageBackground,
+  Platform,
+  KeyboardAvoidingView,
 } from "react-native";
 import UserSvg from "../assets/user-icon.svg";
 
@@ -88,6 +90,9 @@ const Start = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </ImageBackground>
+      {Platform.OS === "ios" ? (
+        <KeyboardAvoidingView behavior="padding" />
+      ) : null}
     </View>
   );
 };

@@ -1,4 +1,4 @@
-# Flicks
+# Chat-Chit
 
 ## About the project
 

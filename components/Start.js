@@ -8,6 +8,7 @@ import {
   ImageBackground,
   Platform,
   KeyboardAvoidingView,
+  Alert,
 } from "react-native";
 import { getAuth, signInAnonymously } from "firebase/auth";
 import UserSvg from "../assets/user-icon.svg";

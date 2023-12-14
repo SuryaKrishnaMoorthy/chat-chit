@@ -9,12 +9,28 @@ import {
   Platform,
   KeyboardAvoidingView,
 } from "react-native";
+import { getAuth, signInAnonymously } from "firebase/auth";
 import UserSvg from "../assets/user-icon.svg";
 
 const Start = ({ navigation }) => {
+  const auth = getAuth();
   const [name, setName] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const hexColors = ["#090C08", "#474056", "#8A95A5", "#B9C6AE"];
+
+  // sign in anonymously via firestore auth
+  const signInUser = () => {
+    signInAnonymously(auth)
+      .then((result) => {
+        navigation.navigate("Chat", {
+          userID: result.user.uid,
+          name: name,
+          color: selectedColor,
+        });
+        Alert.alert("Signed in successfully!");
+      })
+      .catch((err) => Alert.alert("Unable to sign in, try again later."));
+  };
 
   // set state for the background color
   const handleColorPress = (color) => {
@@ -80,12 +96,7 @@ const Start = ({ navigation }) => {
           </View>
 
           {/* Start Chat Button */}
-          <TouchableOpacity
-            style={styles.startButton}
-            onPress={() =>
-              navigation.navigate("Chat", { name: name, color: selectedColor })
-            }
-          >
+          <TouchableOpacity style={styles.startButton} onPress={signInUser}>
             <Text style={styles.buttonText}>Start Chatting</Text>
           </TouchableOpacity>
         </View>

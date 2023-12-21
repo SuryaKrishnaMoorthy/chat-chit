@@ -1,17 +1,35 @@
-import { StyleSheet } from "react-native";
+import { useEffect } from "react";
+import { StyleSheet, Alert } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useNetInfo } from "@react-native-community/netinfo";
+
 const Stack = createNativeStackNavigator();
 
 //import firebase for realtime database and authentication
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import {
+  getFirestore,
+  disableNetwork,
+  enableNetwork,
+} from "firebase/firestore";
 
 //import screens
 import Start from "./components/Start";
 import Chat from "./components/Chat";
 
 export default function App() {
+  const connectionStatus = useNetInfo();
+
+  useEffect(() => {
+    if (connectionStatus.isConnected === false) {
+      disableNetwork(db);
+      Alert.alert("Connection lost!");
+    } else {
+      enableNetwork(db);
+    }
+  }, [connectionStatus.isConnected]);
+
   // Your web app's Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyAf0XNobzYWO_PYVXqEr4lKn45H8wRQgLU",
@@ -37,7 +55,13 @@ export default function App() {
           component={Start}
         />
         <Stack.Screen name="Chat">
-          {(props) => <Chat db={db} {...props} />}
+          {(props) => (
+            <Chat
+              isConnected={connectionStatus.isConnected}
+              db={db}
+              {...props}
+            />
+          )}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
